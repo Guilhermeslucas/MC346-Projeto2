@@ -5,4 +5,9 @@ main = do
     input <- getContents
     let inputListAux = map (splitOn " ") (lines input)
     let inputList = map (filter (not . null)) inputListAux
-    print inputList
+    let begin = inputList!!((length inputList) - 2)
+    let destiny = inputList!!((length inputList) - 1)
+    let paths = (init (init inputList))
+    print paths
+    print begin
+    print destiny

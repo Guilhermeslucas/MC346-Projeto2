@@ -1,0 +1,7 @@
+*.o
+*.hi
+*.txt
+*.in
+*.out
+*.swp
+prog2

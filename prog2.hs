@@ -1,5 +1,11 @@
 import Data.List.Split
 
+-- node structure
+data Node = Node { key :: String
+                 , pathCost :: Int
+                 , cameFrom :: String
+}
+
 -- main funtion. will be the first one to be called
 main = do
     input <- getContents

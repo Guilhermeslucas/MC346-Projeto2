@@ -21,7 +21,7 @@ initDijkstra [firstNodeKey] nodesList paths [lastNodeKey]= minorPath (updateNode
 -- function to calculate the best path
 minorPath nodesList paths actualNode endNode = if actualNode == endNode then nodesList
                                               else do
-                                                  let (previousNodeKey, nodeKey, transitionCost) = minorCost (filterPaths actualNode paths)
+                                                  let (previousNodeKey, nodeKey, transitionCost) = minorCost (filterPaths actualNode paths nodesList)
                                                   minorPath (updateNode nodeKey (findNode nodesList previousNodeKey) transitionCost nodesList) paths nodeKey endNode
 
 
@@ -45,6 +45,7 @@ findNode ((Node key cost cameFromNode):r) nodeKey = if nodeKey == key then (Node
                                                     else findNode r nodeKey
 
 -- find node transition with minor cost
+minorCost [] = ("", "", -1)
 minorCost [(actualNodeKey, nextNodeKey, cost)] = (actualNodeKey, nextNodeKey, cost)
 minorCost ((actualNodeKey, nextNodeKey, cost):r) = do
                                                 let (otherNodeKey, otherNextNodeKey, otherCost) = minorCost r
@@ -53,11 +54,18 @@ minorCost ((actualNodeKey, nextNodeKey, cost):r) = do
                                                     if otherCost > cost then (actualNodeKey, nextNodeKey, cost)
                                                     else (otherNodeKey, otherNextNodeKey, otherCost)
 
--- function to filter path list
-filterPaths actualKey [[actualNodeKey, nextNodeKey, cost]] = if actualNodeKey == actualKey then [(actualNodeKey, nextNodeKey, (read cost :: Float))]
-                                                    else []
-filterPaths actualKey ([actualNodeKey, nextNodeKey, cost]:r) = if actualNodeKey == actualKey then [(actualNodeKey, nextNodeKey, (read cost :: Float))] ++ (filterPaths actualKey r)
-                                                      else (filterPaths actualKey r)
+
+-- function to filter path list, keep just paths from actual node and remove paths to used nodes
+filterPaths actualKey [[actualNodeKey, nextNodeKey, cost]] nodesList = if actualNodeKey == actualKey then do
+                                                                                          let (Node k c f) = findNode nodesList nextNodeKey
+                                                                                          if c == (-1) then [(actualNodeKey, nextNodeKey, (read cost :: Float))]
+                                                                                          else []
+                                                                       else []
+filterPaths actualKey ([actualNodeKey, nextNodeKey, cost]:r) nodesList = if actualNodeKey == actualKey then do
+                                                                                          let (Node k c f) = findNode nodesList nextNodeKey
+                                                                                          if c == (-1) then [(actualNodeKey, nextNodeKey, (read cost :: Float))] ++ (filterPaths actualKey r nodesList)
+                                                                                          else (filterPaths actualKey r nodesList)
+                                                                         else (filterPaths actualKey r nodesList)
 
 -- main funtion. will be the first one to be called
 main = do

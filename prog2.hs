@@ -13,9 +13,6 @@ initNodes paths acc = if paths == [] then acc
                         let second = (head (tail (head paths)))
                         initNodes (tail paths) acc++[(Node first (- 1) "0")]++[(Node second (- 1) "0")]
 
-
-
-
 --function used to remove the repetitive ocurrences
 rmRepeat nodes acc = if nodes == [] then acc
                     else do

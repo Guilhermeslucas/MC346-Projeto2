@@ -11,7 +11,13 @@ initNodes paths acc = if paths == [] then acc
                       else do
                         let first = (head (head paths))
                         let second = (head (tail (head paths)))
-                        initNodes (tail paths) acc++[(Node first (- 1) "0")]++[(Node second (- 1) "0")]
+                        if not (any ((Node first (- 1) "0")==) acc) && not (any ((Node second (- 1) "0")==) acc) then
+                            initNodes (tail paths) acc++[(Node first (- 1) "0")]++[(Node second (- 1) "0")]
+                        else
+                            if not (any ((Node first (- 1) "0")==) acc) then
+                                initNodes (tail paths) acc++[(Node first (- 1) "0")]
+                            else
+                                initNodes (tail paths) acc++[(Node second (- 1) "0")]
 
 
 -- main funtion. will be the first one to be called

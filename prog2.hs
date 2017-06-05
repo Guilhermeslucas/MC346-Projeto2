@@ -1,3 +1,6 @@
+-- Nome: Guilherme Lucas da Silva RA:155618
+-- Nome: Gustavo Villela Taufic RA: 149211
+    
 -- node structure
 data Node = Node String Float String deriving (Show, Eq, Ord)
 

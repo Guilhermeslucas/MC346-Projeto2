@@ -11,14 +11,18 @@ initNodes paths acc = if paths == [] then acc
                       else do
                         let first = (head (head paths))
                         let second = (head (tail (head paths)))
-                        if not (any ((Node first (- 1) "0")==) acc) && not (any ((Node second (- 1) "0")==) acc) then
-                            initNodes (tail paths) acc++[(Node first (- 1) "0")]++[(Node second (- 1) "0")]
-                        else
-                            if not (any ((Node first (- 1) "0")==) acc) then
-                                initNodes (tail paths) acc++[(Node first (- 1) "0")]
-                            else
-                                initNodes (tail paths) acc++[(Node second (- 1) "0")]
+                        initNodes (tail paths) acc++[(Node first (- 1) "0")]++[(Node second (- 1) "0")]
 
+
+
+
+--function used to remove the repetitive ocurrences
+rmRepeat nodes acc = if nodes == [] then acc
+                    else do
+                        let first = (head nodes)
+                        let aux = filter (/=first) nodes
+                        rmRepeat aux [first]++acc
+                        
 
 -- main funtion. will be the first one to be called
 main = do
@@ -28,7 +32,8 @@ main = do
     let begin = inputList!!((length inputList) - 2)
     let destiny = inputList!!((length inputList) - 1)
     let paths = (init (init inputList))
-    let nodes = initNodes paths []
+    let nodesAux = initNodes paths []
+    let nodes = rmRepeat nodesAux []
     print nodes
     print paths
     print begin

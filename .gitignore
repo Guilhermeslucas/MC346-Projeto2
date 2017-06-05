@@ -1,6 +1,5 @@
 *.o
 *.hi
-*.txt
 *.in
 *.out
 *.swp

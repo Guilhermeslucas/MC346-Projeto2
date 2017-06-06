@@ -1,6 +1,8 @@
 -- Nome: Guilherme Lucas da Silva RA:155618
 -- Nome: Gustavo Villela Taufic RA: 149211
-    
+import Data.List (sortBy)
+import Data.Ord (comparing)
+
 -- node structure
 data Node = Node String Float String deriving (Show, Eq, Ord)
 
@@ -76,6 +78,16 @@ getCost nodes destiny = do
                 if key == destiny then cost
                 else getCost (tail nodes) destiny
 
+
+-- functions used to sort the node strucutures
+comparingNodes = comparing nodeCost
+    where nodeCost (Node _ x _) = x
+
+sortNodes = sortBy comparingNodes
+
+-- function to return just the key of the node
+nodeKey (Node key _ _) = key
+
 -- main funtion. will be the first one to be called
 main = do
     input <- getContents
@@ -100,3 +112,9 @@ main = do
     else do
         let cost = getCost nodesUpdated destinyAux
         putStrLn ("custo: " ++ show cost)
+        let sorted = sortNodes nodesUpdated
+        let filtered = filter (\(Node key cost came) -> cost /= (-1)) sorted 
+        let maped = map nodeKey filtered
+        putStr (unwords maped)
+        putStrLn " "
+

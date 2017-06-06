@@ -27,7 +27,9 @@ initDijkstra [firstNodeKey] nodesList paths [lastNodeKey]= minorPath (updateNode
 minorPath nodesList paths actualNode endNode = if actualNode == endNode then nodesList
                                               else do
                                                   let (previousNodeKey, nodeKey, transitionCost) = minorCost (filterPaths actualNode paths nodesList) endNode
-                                                  minorPath (updateNode nodeKey (findNode nodesList previousNodeKey) transitionCost nodesList) paths nodeKey endNode
+                                                  if previousNodeKey == "" then nodesList
+                                                  else
+                                                    minorPath (updateNode nodeKey (findNode nodesList previousNodeKey) transitionCost nodesList) paths nodeKey endNode
 
 
 -- function to update nodes list

@@ -86,3 +86,10 @@ main = do
     print begin
     print destiny
     print nodesUpdated
+    let [beginAux] = begin
+    let [destinyAux] = destiny
+    putStrLn ("inicial: " ++ beginAux)
+    putStrLn ("final: " ++ destinyAux)
+    if (elem (Node destinyAux (-1.0) "0")) nodesUpdated then putStrLn "nada"
+    else putStrLn "tem caminho"
+        

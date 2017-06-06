@@ -102,11 +102,6 @@ main = do
     let nodesAux = initNodes paths []
     let nodes = rmRepeat nodesAux []
     let nodesUpdated = initDijkstra begin nodes paths destiny
-    print nodes
-    print paths
-    print begin
-    print destiny
-    print nodesUpdated
     let [beginAux] = begin
     let [destinyAux] = destiny
     putStrLn ("inicial: " ++ beginAux)

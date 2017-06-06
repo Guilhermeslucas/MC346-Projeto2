@@ -70,6 +70,12 @@ filterPaths actualKey ([actualNodeKey, nextNodeKey, cost]:r) nodesList = if actu
                                                                                           else (filterPaths actualKey r nodesList)
                                                                          else (filterPaths actualKey r nodesList)
 
+-- function to return the cost of path
+getCost nodes destiny = do
+                let (Node key cost _) = (head nodes)
+                if key == destiny then cost
+                else getCost (tail nodes) destiny
+
 -- main funtion. will be the first one to be called
 main = do
     input <- getContents
@@ -91,5 +97,6 @@ main = do
     putStrLn ("inicial: " ++ beginAux)
     putStrLn ("final: " ++ destinyAux)
     if (elem (Node destinyAux (-1.0) "0")) nodesUpdated then putStrLn "nada"
-    else putStrLn "tem caminho"
-        
+    else do
+        let cost = getCost nodesUpdated destinyAux
+        putStrLn ("custo: " ++ show cost)

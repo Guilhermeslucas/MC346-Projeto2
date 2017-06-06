@@ -26,7 +26,7 @@ initDijkstra [firstNodeKey] nodesList paths [lastNodeKey]= minorPath (updateNode
 -- function to calculate the best path
 minorPath nodesList paths actualNode endNode = if actualNode == endNode then nodesList
                                               else do
-                                                  let (previousNodeKey, nodeKey, transitionCost) = minorCost (filterPaths actualNode paths nodesList)
+                                                  let (previousNodeKey, nodeKey, transitionCost) = minorCost (filterPaths actualNode paths nodesList) endNode
                                                   minorPath (updateNode nodeKey (findNode nodesList previousNodeKey) transitionCost nodesList) paths nodeKey endNode
 
 
@@ -49,15 +49,16 @@ findNode [node] _ = node
 findNode ((Node key cost cameFromNode):r) nodeKey = if nodeKey == key then (Node key cost cameFromNode)
                                                     else findNode r nodeKey
 
--- find node transition with minor cost
-minorCost [] = ("", "", -1)
-minorCost [(actualNodeKey, nextNodeKey, cost)] = (actualNodeKey, nextNodeKey, cost)
-minorCost ((actualNodeKey, nextNodeKey, cost):r) = do
-                                                let (otherNodeKey, otherNextNodeKey, otherCost) = minorCost r
-                                                if otherCost == -1 then (actualNodeKey, nextNodeKey, cost)
-                                                else
-                                                    if otherCost > cost then (actualNodeKey, nextNodeKey, cost)
-                                                    else (otherNodeKey, otherNextNodeKey, otherCost)
+-- look for a direct transition to the end node or path with minor cost to a next node
+minorCost [] _ = ("", "", -1)
+minorCost [(actualNodeKey, nextNodeKey, cost)] endNodeKey = (actualNodeKey, nextNodeKey, cost)
+minorCost ((actualNodeKey, nextNodeKey, cost):r) endNodeKey = if nextNodeKey == endNodeKey then (actualNodeKey, nextNodeKey, cost)
+                                                              else do
+                                                                  let (otherNodeKey, otherNextNodeKey, otherCost) = minorCost r endNodeKey
+                                                                  if otherCost == -1 then (actualNodeKey, nextNodeKey, cost)
+                                                                  else
+                                                                      if otherCost > cost then (actualNodeKey, nextNodeKey, cost)
+                                                                      else (otherNodeKey, otherNextNodeKey, otherCost)
 
 
 -- function to filter path list, keep just paths from actual node and remove paths to used nodes
@@ -113,8 +114,7 @@ main = do
         let cost = getCost nodesUpdated destinyAux
         putStrLn ("custo: " ++ show cost)
         let sorted = sortNodes nodesUpdated
-        let filtered = filter (\(Node key cost came) -> cost /= (-1)) sorted 
+        let filtered = filter (\(Node key cost came) -> cost /= (-1)) sorted
         let maped = map nodeKey filtered
         putStr (unwords maped)
         putStrLn " "
-

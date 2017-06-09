@@ -35,7 +35,7 @@ minorPath nodesList paths actualNode endNode =
         if nK == "" then
           nodesList
         else
-          minorPath (updateNode nK (findNode nodesList pNK) transitionCost nodesList) paths nK endNode
+          minorPath (updateNode nK (findNode nodesList pNK) tC nodesList) paths nK endNode
       else
         if previousNodeKey == "" then
           nodesList
@@ -141,8 +141,6 @@ main = do
     let nodesUpdated = initDijkstra begin nodes paths destiny
     let [beginAux] = begin
     let [destinyAux] = destiny
-    print paths
-    print nodes
     putStrLn ("inicial: " ++ beginAux)
     putStrLn ("final: " ++ destinyAux)
     if (elem (Node destinyAux (-1.0) "0")) nodesUpdated then putStrLn "nada"
